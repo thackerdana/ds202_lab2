@@ -1,0 +1,41 @@
+
+---
+title: 'hw2.Rmd'
+author: "Andrew Fahmy"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+    choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv")
+    # str(choco)
+```
+
+
+
+# 4.
+```{r, fig.height = 5, fig.width =6}
+    data = choco[,c("Bean_Origin", "Rating")]
+    newdata = aggregate(x = data$Rating, by = list(data$Bean_Origin), FUN = mean)
+    newdata = tail(newdata[order(newdata$x),],5)
+    newdata
+    newdata = as.matrix(newdata)
+    barplot(newdata$x, names.arg = newdata$Group.1)
+
+```
+
+
+# 5.
+```{r}
+    data = choco[,c("Date", "Rating")]
+    newdata = aggregate(x = data$Rating, by = list(data$Date), FUN = mean)
+    plot(newdata)
+    
+```
+
+This chart shows the relationship between the date and the ratings. In the
+earlier years they had lower ratings and as time goes on you can see the
+mean of the rating increase.

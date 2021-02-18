@@ -1,0 +1,73 @@
+---
+title: 'hw2.Rmd'
+author: "Andrew Fahmy"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+    choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv")
+    str(choco)
+```
+
+# 1.
+```{r}
+    boxplot(choco$Rating)
+    hist(choco$Rating)
+```
+
+The ratings are mostly between 2.2 to 4.0. The average rating of all of the
+chocolates is about 3.25. There are a few outliers but they are only at the
+bottom of the scale, from around 1.0 to 2.0.
+
+# 2.
+```{r}
+    tbl = tail(sort(table(choco$Location)), 5)
+    tbl
+    barplot(tbl)
+```
+
+The USA has way more than any other location. The USA as 800+ while other places
+just reach 200 at most.
+
+# 3.
+```{r}
+    data = choco[,c("Cocoa_Percent", "Rating")]
+    d1 = data[data$Cocoa_Percent < 85, ]
+    mean(d1$Rating)
+    d2 = data[data$Cocoa_Percent >= 85, ]
+    mean(d2$Rating)
+    barplot(c(mean(d1$Rating), mean(d2$Rating)), col=c("red", "blue"))
+```
+
+I have divide data in chunks, with the red plot being the mean of ratings for
+cocoa percent less than 85, and blue is mean of ratings for cocoa percent
+greater then 85. It looks like they are close, but the lower cocoa percent
+has a higher rating.
+
+# 4.
+```{r, fig.height = 5, fig.width =6}
+    data = choco[,c("Bean_Origin", "Rating")]
+    newdata = aggregate(x = data$Rating, by = list(data$Bean_Origin), FUN = mean)
+    newdata = tail(newdata[order(newdata$x),],5)
+    newdata
+    newdata = as.matrix(newdata)
+    barplot(newdata$x, names.arg = newdata$Group.1)
+
+```
+
+
+# 5.
+```{r}
+    data = choco[,c("Date", "Rating")]
+    newdata = aggregate(x = data$Rating, by = list(data$Date), FUN = mean)
+    plot(newdata)
+    
+```
+
+This chart shows the relationship between the date and the ratings. In the
+earlier years they had lower ratings and as time goes on you can see the
+mean of the rating increase.
