@@ -1,0 +1,239 @@
+---
+title: "individual2"
+author: "Dana Thacker"
+date: "2/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+choco <- read.csv("https://raw.githubusercontent.com/xdaiISU/ds202materials/master/hwlabs/data/choco.csv") 
+str(choco) 
+
+#Question 1 - How are the ratings distributed?
+hist(choco$Rating)
+boxplot(choco$Rating)
+#The histogram is unimodal and normal barring the outliers to the left of the main portion of data. If the outliers are taken into account, the histogram is left skewed, and still unimodal. The boxplot clearly shows the outliers underneath the main portion of the plot and the variance of the boxplot looks relatively small.
+
+
+
+#Question 2 - How does the number of ratings depend on the location of the company?
+counts <- table(choco$Location)
+barplot(counts, main='Company Ratings', xlab ='Company')
+
+sCC <- sort(counts)
+sCC
+
+ratingVct <- (choco$Rating)
+ratingMean <- mean(ratingVct, na.rm=TRUE)
+ratingMean
+#The average rating is 3.184
+
+USAdata <- choco[choco$Location == "U.S.A.", ]
+USARating <- (USAdata$Rating)
+USARatingMean <- mean(USARating, na.rm=TRUE)
+USARatingMean
+#The average USA rating is 3.171
+
+Francedata <- choco[choco$Location == "France", ]
+FranceRating <- (Francedata$Rating)
+FranceRatingMean <- mean(FranceRating, na.rm=TRUE)
+FranceRatingMean
+#The average France rating is 3.25
+
+Canadadata <- choco[choco$Location == "Canada", ]
+CanadaRating <- (Canadadata$Rating)
+CanadaRatingMean <- mean(CanadaRating, na.rm=TRUE)
+CanadaRatingMean
+#The average Canada rating is 3.301
+
+UKdata <- choco[choco$Location == "U.K.", ]
+UKRating <- (UKdata$Rating)
+UKRatingMean <- mean(UKRating, na.rm=TRUE)
+UKRatingMean
+#The average U.K. rating is 3.063
+
+Spaindata <- choco[choco$Location == "Spain", ]
+SpainRating <- (Spaindata$Rating)
+SpainRatingMean <- mean(SpainRating, na.rm=TRUE)
+SpainRatingMean
+#The average Spain rating is 3.264
+
+Japandata <- choco[choco$Location == "Japan", ]
+JapanRating <- (Japandata$Rating)
+JapanRatingMean <- mean(JapanRating, na.rm=TRUE)
+JapanRatingMean
+#The average Japan rating is 3.129
+
+
+#Question 3 - Do ratings depend on the cocoa percentage of a chocolate bar?
+plot(choco$Rating, choco$Cocoa_Percent)
+
+counts2 <- table(choco$Rating, choco$Cocoa_Percent)
+barplot(counts2)
+
+data = choco[,c("Cocoa_Percent", "Rating")]
+
+lowCocoa = data[data$Cocoa_Percent < 85, ]
+lowCocoaMean <- mean(lowCocoa$Rating)
+lowCocoaMean
+#Low Cocoa Percentage mean rating of 3.199
+
+highCocoa = data[data$Cocoa_Percent >= 85, ]
+highCocoaMean <- mean(highCocoa$Rating)
+highCocoaMean
+#Low Cocoa Percentage mean rating of 2.8
+
+plot(lowCocoa, highCocoa)
+
+#It appears as though the cocoa percentage of a chocolate bar does impact the rating of the chocolate. Chocolate with lower than 85% cocoa has an average ranking of 0.4 higher than chocolate with higher than 85% cocoa.
+
+#Question 4 - How do different bean origins compare in terms of the flavor of chocolates?
+originCount <- table(choco$Bean_Origin)
+sOC <- sort(originCount)
+sOC
+
+data2 = choco[,c("Bean_Origin", "Rating")]
+
+venDta <- choco[choco$Bean_Origin == "Venezuela", ]
+venRate <- (venDta$Rating)
+venMeanRate <- mean(venRate, na.rm=TRUE)
+venMeanRate
+#Venezuela Mean Rating 3.224
+
+peruDta <- choco[choco$Bean_Origin == "Peru", ]
+peruRate <- (peruDta$Rating)
+peruMeanRate <- mean(peruRate, na.rm=TRUE)
+peruMeanRate
+#Peru Mean Rating 3.165
+
+ecuDta <- choco[choco$Bean_Origin == "Ecuador", ]
+ecuRate <- (ecuDta$Rating)
+ecuMeanRate <- mean(ecuRate, na.rm=TRUE)
+ecuMeanRate
+#Ecuador Mean Rating 3.159
+
+USAdata2 <- choco[choco$Bean_Origin== "U.S.A.", ]
+USARating2 <- (USAdata2$Rating)
+USARatingMean2 <- mean(USARating2, na.rm=TRUE)
+USARatingMean2
+#USA Mean Rating 3.217
+
+VietnamDTA <- choco[choco$Bean_Origin== "Vietnam", ]
+vietRate <- (VietnamDTA$Rating)
+vietMeanRate <- mean(vietRate, na.rm=TRUE)
+vietMeanRate
+#Vietnam Mean Rating 3.254
+
+philiDta <- choco[choco$Bean_Origin == "Philippines", ]
+philiRate <- (philiDta$Rating)
+philiMeanRate <- mean(philiRate, na.rm=TRUE)
+philiMeanRate
+#Philippines Mean Rating 3.105
+
+indiaDta <- choco[choco$Bean_Origin == "India", ]
+indiaRate <- (indiaDta$Rating)
+indiaMeanRate <- mean(indiaRate, na.rm=TRUE)
+indiaMeanRate
+#India Mean Rating 3.155hwyMPG <- mpg$hwy
+
+
+meanRates <- c(venMeanRate, peruMeanRate, ecuMeanRate, USARatingMean2, vietMeanRate, philiMeanRate, indiaMeanRate)
+meanRates
+
+barplot(meanRates)
+
+#Based on the analysis I have done from comparing mean ratings of several bean origins, it appears that there are no large differences in the average means of the countries. There are slight variations, but they are all within 0.1 of each others ratings. The average mean of all of the ratings is also very close to all of these average ratings. This leads me to believe that the origin of the beans have no real effect on the rating of the chocolate.
+
+
+#Question 5- Most desirable characteristics as determined by rating
+
+data3 = choco[,c("Characteristics1", "Rating")]
+    newdata = aggregate(x = data3$Rating, by = list(data3$Characteristics1), FUN = mean)
+    newdata = tail(newdata[order(newdata$x),],5)
+    newdata
+    newdata = as.matrix(newdata)
+
+#Some of the top characteristics that contributed to the higher ratings of chocolate were "pronounced berry," "simple red berry," "smoth," "sweet spice," and "well defined." All of these characteristics resulted in a rating of 4 which is quite high as compared to the average chocolate rating.
+
+```
+
+**North America**
+U.S.A.
+Mexico
+St. Vincent-Grenadines
+Tobago
+Trinidad
+El Salvador
+Puerto Rico
+Panama
+St. Lucia
+Congo
+Cuba
+Grenada
+Honduras
+Jamaica
+Haiti
+Costa Rica
+Guatemala
+Belize
+Nicaragua
+Dominican Republic
+
+**South America**
+Brazil
+Ecuador
+Peru
+Venezuela
+Bolivia
+Suriname
+Colombia
+Bolivia
+
+**Africa**
+Uganda
+Madagascar
+DR Congo
+Gabon
+Principe
+Sao Tome & Principe
+Cameroon
+Liberia
+Nigeria
+Sierra Leone
+Togo
+Ivory Coast
+Sao Tome
+Ghana
+Tanzania
+
+**Asia**
+Philippines
+India
+Burma
+Sulawesi
+Sumatra
+Sri Lanka
+Taiwan
+Thailand
+Malaysia
+Indonesia
+Vietnam
+
+**Australia**
+Australia
+
+**Europe**
+Martinique
+
+**Oceania**
+Samoa
+Solomon Islands
+Vanuatu
+Fiji
+Papua New Guinea
+
+Blend x2
